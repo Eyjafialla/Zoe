@@ -35,7 +35,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: user/app:latest
+          tags: eyjafialla/app:latest
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.1.1
@@ -70,4 +70,3 @@ jobs:
   #         initial_comment: 'post by slack-upload-file'
   #         # thread_ts: 'option'
 
-  
