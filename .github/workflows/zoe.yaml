@@ -1,0 +1,47 @@
+name: Zoe
+on:
+  push:
+    branches:
+      - v1.0
+  pull_request:
+jobs:
+  build:
+    name: Building the workflow
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Trivy vulnerability scanner in repo mode
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          severity: 'CRITICAL'
+
+      - name: Send GitHub Action trigger data to Slack workflow
+        uses: rtCamp/action-slack-notify@v2
+        env:
+            SLACK_TITLE: "Image build and signed"
+            SLACK_MESSAGE: |
+              Name: Zoe
+              Matriculation: A2429659G
+              Email: e1221776@u.nus.edu
+              GitHub: https://github.com/repo/code.git
+              Docker: https://hub.docker.com/repository/docker/username/repo/general
+            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+
+  #     jobs:
+  # post:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: MeilCli/slack-upload-file@v3
+  #       with:
+  #         slack_token: ${{ secrets.SLACK_TOKEN }}
+  #         channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+  #         content: 'file content'
+  #         file_type: 'text'
+  #         file_name: 'text.txt'
+  #         title: 'title of file'
+  #         initial_comment: 'post by slack-upload-file'
+  #         # thread_ts: 'option'
