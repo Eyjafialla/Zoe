@@ -6,7 +6,7 @@ on:
   pull_request:
 jobs:
   build:
-    name: Building the workflow
+    name: Building a success workflow
     if: ${{ startsWith(github.event.head_commit.message, '#norun') != true }}
     runs-on: ubuntu-latest
     steps:
@@ -57,6 +57,7 @@ jobs:
  
 
   jobs2:
+    name: Building a fail workflow
     if: ${{ startsWith(github.event.head_commit.message, '#norun') != true }}
     runs-on: ubuntu-latest
     steps:
