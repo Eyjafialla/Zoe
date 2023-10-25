@@ -57,7 +57,7 @@ jobs:
             SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
  
 
- jobs:
+ jobs2:
    if: ${{ startsWith(github.event.head_commit.message, '#norun') != true }}
    post:
    runs-on: ubuntu-latest
