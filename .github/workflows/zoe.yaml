@@ -7,6 +7,7 @@ on:
 jobs:
   build:
     name: Building the workflow
+    if: ${{ startsWith(github.event.head_commit.message, '#norun') != true }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -16,7 +17,8 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
-          severity: 'HIGH'
+          severity: 'CRITICAL'
+          
 
       -
         name: Set up QEMU
@@ -42,7 +44,7 @@ jobs:
       - name: Check install!
         run: cosign version
 
-      - name: Send GitHub Action trigger data to Slack workflow
+      - name: Send the 'success' notification to Slack
         uses: rtCamp/action-slack-notify@v2
         env:
             SLACK_TITLE: "Image build and signed"
@@ -53,20 +55,38 @@ jobs:
               GitHub: https://github.com/repo/code.git
               Docker: https://hub.docker.com/repository/docker/username/repo/general
             SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+ 
 
+ jobs:
+   if: ${{ startsWith(github.event.head_commit.message, '#norun') != true }}
+   post:
+   runs-on: ubuntu-latest
+   steps:
+     name: Checkout code
+     uses: actions/checkout@v3
 
-  #     jobs:
-  # post:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: MeilCli/slack-upload-file@v3
-  #       with:
-  #         slack_token: ${{ secrets.SLACK_TOKEN }}
-  #         channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-  #         content: 'file content'
-  #         file_type: 'text'
-  #         file_name: 'text.txt'
-  #         title: 'title of file'
-  #         initial_comment: 'post by slack-upload-file'
-  #         # thread_ts: 'option'
+     name: Run Trivy vulnerability scanner in repo mode
+     uses: aquasecurity/trivy-action@master
+     with:
+       scan-type: 'fs' 
+       severity: 'HIGH'
+       format: 'table'
+       output： 'report.txt'
+
+     name: Send the 'fail' notification to Slack
+      uses: rtCamp/action-slack-notify@v2
+      env:
+          SLACK_COLOR: '#FF0000'
+          SLACK_TITLE: "Scan failed - Zoe"
+          SLACK_MESSAGE: |
+            The trivy scan has failed, please see uploaded report for details
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  
+          
+      uses: MeilCli/slack-upload-file@v3
+      with:
+        slack_token: ${{ secrets.SLACK_TOKEN }}
+        channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+        file_path: 'report.txt'
+        initial_comment: 'Scan report by Zoe'
+           # thread_ts: 'option'
 
