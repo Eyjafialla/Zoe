@@ -1,8 +1,8 @@
-name: Zoe
+name: Zoe's CICD workshop
 on:
   push:
     branches:
-      - v1.0
+      - 'v[0-9]+.[0-9]+'
   pull_request:
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run Trivy vulnerability scanner in repo mode
+      - name: Trivy vulnerability Check
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
@@ -44,7 +44,7 @@ jobs:
         with:
           cosign-release: 'v2.2.0'
 
-      - name: Sign image with a key
+      - name: Sign an image with a key
         run: |
           cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
         env:
@@ -74,7 +74,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run Trivy vulnerability scanner in repo mode
+      - name: Trivy vulnerability Check
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs' 
