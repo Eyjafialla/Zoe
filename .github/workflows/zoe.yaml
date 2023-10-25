@@ -58,7 +58,7 @@ jobs:
         env:
             SLACK_TITLE: "Image build and signed"
             SLACK_MESSAGE: |
-              Name: Zoe
+              Name: GE HONGRUI
               Matriculation: A0285964J
               Email: e1221776@u.nus.edu
               GitHub: https://github.com/repo/code.git
