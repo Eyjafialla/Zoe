@@ -70,7 +70,7 @@ jobs:
           scan-type: 'fs' 
           severity: 'HIGH'
           format: 'table'
-          output： 'report.txt'
+          output: 'report.txt'
 
       - name: Send the 'fail' notification to Slack
         uses: rtCamp/action-slack-notify@v2
