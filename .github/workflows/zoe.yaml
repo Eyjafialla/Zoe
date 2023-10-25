@@ -58,7 +58,6 @@ jobs:
 
   jobs2:
     if: ${{ startsWith(github.event.head_commit.message, '#norun') != true }}
-    post:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
